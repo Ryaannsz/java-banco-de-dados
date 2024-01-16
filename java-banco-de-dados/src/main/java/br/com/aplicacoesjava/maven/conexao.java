@@ -19,8 +19,8 @@ public class conexao {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			conexao = DriverManager.getConnection("jdbc:mysql://localhost/java_banco", "root", "1234");
-			Autor autor = new Autor(conexao);
-			Livro livro = new Livro(conexao);
+		
+		
 			
 			
 			while(whilezinho==0) {
@@ -34,22 +34,22 @@ public class conexao {
 			
 			switch(op) {
 				case 1:
-					autor.cadastroAutor();
+					criarAutor();
 					break;
 				case 2:
-					autor.excluirAutor();
+					removerAutor();
 					break;
 				case 3:
-					livro.cadastrarLivro();
+					criarLivro();
 					break;
 				case 4:
-					livro.excluirLivro();
+					excluirLivro();
 					break;
 				case 5:
-					autor.listarAutor();
+					listarAutor();
 					break;
 				case 6:
-					livro.listarLivros();
+					listarLivro();
 					break;
 				default:
 					whilezinho++;
@@ -72,62 +72,58 @@ public class conexao {
 	}
 	
 	
+	public static void criarAutor() {
+		System.out.println("Digite o nome do autor: ");
+		String nome = sc.next();
+		System.out.println("Digite a nacionalidade do autor: ");
+		String nacionalidade = sc.next();
+		Autor autor = new Autor(nome, nacionalidade, conexao);
+		autor.cadastroAutorBanco();
+	}
 	
-	/*
-	public static boolean insert(Connection conexao) {
+	public static void removerAutor() {
 		
-		try {
-			PreparedStatement pstmt = conexao.prepareStatement("INSERT INTO cliente(nome) VALUE (?)");
-			System.out.println("Digite o nome do cliente: ");
-			String nome = sc.next();
+		listarAutor();
 		
-			pstmt.setString(1, nome);
-			pstmt.executeUpdate();
-			
-			return true;
-		} catch (SQLException e) {
-			System.out.println("Erro ao inserir no banco de dados: "+e.getMessage());
-			return false;
-		}
-		
+		System.out.println("Digite o nome do autor: ");
+		String nome = sc.next();
+		Autor autor = new Autor(nome, null, conexao);
+		autor.excluirAutorBanco();
+	}
 	
+	public static void listarAutor() {
+		Autor autor = new Autor(null, null, conexao);
+		autor.listarAutor();
+	}
+	
+	
+	public static void criarLivro() {
+		System.out.println("Digite o titulo: ");
+		String titulo = sc.next();
+		System.out.println("Digite o ano de publicação: ");
+		int ano = sc.nextInt();
+		
+		Livro livro = new Livro(titulo, ano, conexao);
+		livro.cadastrarLivroBanco();
 		
 	}
 	
-	public static boolean listar(Connection conexao) {
+	public static void excluirLivro() {
+		listarLivro();
 		
-	
-			try {
-				ResultSet listarClientes = conexao.createStatement().executeQuery("SELECT * FROM CLIENTE");
-				while(listarClientes.next()) {
-					System.out.println("Nome: "+listarClientes.getString("nome"));
-				}
-				return true;
-			} catch (SQLException e) {
-				System.out.println("Erro ao listar os clients: "+e.getMessage());
-				return false;
-			}
-			
-			
+		System.out.println("Informe o titulo do livro que deseja excluir: ");
+		String titulo = sc.next();
+		
+		Livro livro = new Livro(titulo, 0, conexao);
+		livro.excluirLivroBanco();
+		
 	}
 	
-	public static boolean remover(Connection conexao) {
-		
-		try {
-			PreparedStatement pstmt = conexao.prepareStatement("DELETE FROM cliente WHERE nome=?");
-			System.out.println("Digite o nome que deseja excluir");
-			String nome = sc.next();
-			pstmt.setString(1, nome);
-			pstmt.executeUpdate();
-			return true;
-		} catch (SQLException e) {
-			System.out.println("Erro ao deletar o nome: "+e.getMessage());
-			return false;
-		}
-		
-		
-	
+	public static void listarLivro() {
+		Livro livro = new Livro(null, 0, conexao);
+		livro.listarLivrosBanco();
 	}
-	*/
+	
+	
 	
 }
