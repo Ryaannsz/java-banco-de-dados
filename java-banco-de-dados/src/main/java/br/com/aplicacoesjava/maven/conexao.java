@@ -8,48 +8,55 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class conexao {
+	//Referência global
 	static Scanner sc = new Scanner(System.in);
+	static Connection conexao = null;
+	
 	public static void main(String[] args) throws SQLException {
-		Connection conexao = null;
+		int op = 0, whilezinho=0;
 		
 		//Conexão com o banco
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			conexao = DriverManager.getConnection("jdbc:mysql://localhost/java_banco", "root", "1234");
+			Autor autor = new Autor(conexao);
+			Livro livro = new Livro(conexao);
 			
-			int num=0,op=0;
-			while(num==0) {
-			System.out.println("Digite a opção que desejar: ");
-			System.out.println("1 - Listar");
-			System.out.println("2 - Adicionar");
-			System.out.println("3 - Remover");
-			System.out.println("Qualquer outra tecla fechará o programa");
-			op = sc.nextInt();
-				switch(op) {
-				
-					case 1:
-						listar(conexao);
-						break;
-					case 2:
-						insert(conexao);
-						break;
-					case 3:
-						remover(conexao);
-						break;
-					default:
-						System.out.println("Obrigado por utilizar o programa!");
-						num++;
-				}
+			
+			while(whilezinho==0) {
+				System.out.println("Caso 1 - cadastro autor");
+				System.out.println("Caso 2 - excluir autor");
+				System.out.println("Caso 3 - cadastro livro");
+				System.out.println("Caso 4 - excluir livro");
+				System.out.println("Caso 5 - listar autor");
+				System.out.println("Caso 6 - listar livros");
+				op=sc.nextInt();
+			
+			switch(op) {
+				case 1:
+					autor.cadastroAutor();
+					break;
+				case 2:
+					autor.excluirAutor();
+					break;
+				case 3:
+					livro.cadastrarLivro();
+					break;
+				case 4:
+					livro.excluirLivro();
+					break;
+				case 5:
+					autor.listarAutor();
+					break;
+				case 6:
+					livro.listarLivros();
+					break;
+				default:
+					whilezinho++;
 			}
+		}
 			
-			
-			
-			
-			
-			
-			
-			
-			
+		
 		} catch (ClassNotFoundException e) {
 			System.out.println("Classe não encontrada");
 		}catch(SQLException e){
@@ -65,6 +72,8 @@ public class conexao {
 	}
 	
 	
+	
+	/*
 	public static boolean insert(Connection conexao) {
 		
 		try {
@@ -119,5 +128,6 @@ public class conexao {
 		
 	
 	}
+	*/
 	
 }
