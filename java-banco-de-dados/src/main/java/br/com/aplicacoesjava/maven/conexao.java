@@ -180,7 +180,7 @@ public class conexao {
 		
 		System.out.println("Qual a data deseja devolver? Formato: dd/MM/yyyy");
 		String inputDate = sc.next();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		
 		try {
 			
