@@ -39,6 +39,8 @@ public class conexao {
 				System.out.println("Caso 8- remover usuarios");
 				System.out.println("Caso 9 - listar usuarios");
 				System.out.println("Caso 10 - criar emprestimos");
+				System.out.println("Caso 11 - cancelar emprestimos");
+				System.out.println("Caso 12 - listar emprestimos");
 				op=sc.nextInt();
 			
 			switch(op) {
@@ -72,6 +74,12 @@ public class conexao {
 				case 10:
 					criarEmprestimo();
 					break;
+				case 11:
+					cancelarEmprestimo();
+					break;
+				case 12:
+					listarEmprestimo(null);
+					break;
 				default:
 					whilezinho++;
 			}
@@ -94,10 +102,14 @@ public class conexao {
 	
 	
 	public static void criarAutor() {
+		sc.nextLine();
 		System.out.println("Digite o nome do autor: ");
-		String nome = sc.next();
+		
+		String nome = sc.nextLine();
+	
 		System.out.println("Digite a nacionalidade do autor: ");
-		String nacionalidade = sc.next();
+		String nacionalidade = sc.nextLine();
+	
 		Autor autor = new Autor(nome, nacionalidade, conexao);
 		autor.cadastroAutorBanco();
 	}
@@ -105,9 +117,9 @@ public class conexao {
 	public static void removerAutor() {
 		
 		listarAutor();
-		
+		sc.nextLine();
 		System.out.println("Digite o nome do autor: ");
-		String nome = sc.next();
+		String nome = sc.nextLine();
 		Autor autor = new Autor(nome, null, conexao);
 		autor.excluirAutorBanco();
 	}
@@ -119,8 +131,9 @@ public class conexao {
 	
 	
 	public static void criarLivro() {
+		sc.nextLine();
 		System.out.println("Digite o titulo: ");
-		String titulo = sc.next();
+		String titulo = sc.nextLine();
 		System.out.println("Digite o ano de publicação: ");
 		int ano = sc.nextInt();
 		
@@ -131,9 +144,9 @@ public class conexao {
 	
 	public static void excluirLivro() {
 		listarLivro();
-		
+		sc.nextLine();
 		System.out.println("Informe o titulo do livro que deseja excluir: ");
-		String titulo = sc.next();
+		String titulo = sc.nextLine();
 		
 		Livro livro = new Livro(titulo, 0, conexao);
 		livro.excluirLivroBanco();
@@ -171,9 +184,12 @@ public class conexao {
 	}
 	
 	public static void criarEmprestimo() {
+		listarUsuarios();
+		
 		System.out.println("Qual usuário que deseja pegar um livro?");
 		String nomeUsuario = sc.next();
 		
+		listarLivro();
 		
 		System.out.println("Qual livro "+nomeUsuario+" deseja pegar?");
 		String tituloLivro = sc.next();
@@ -192,6 +208,49 @@ public class conexao {
 		} catch (java.text.ParseException e) {
 			System.out.println("Erro ao formatar a data: "+e.getMessage());
 		}
+	}
+	
+	public static void cancelarEmprestimo() {
+		listarUsuarios();
+		
+		System.out.println("Qual o nome do usuário que deseja cancelar o empréstimo?");
+		String usuario = sc.next();
+		
+		
+		
+		listarEmprestimo(usuario);
+		
+		System.out.println("Selecione o nome do livro que deseja cancelar o emprestimo: ");
+		String nomeLivro = sc.next();
+		
+		Emprestimo emprestimo = new Emprestimo (usuario, nomeLivro, null, conexao);
+		emprestimo.cancelarEmprestimo();
+		
+		
+		
+	}
+	
+	public static void listarEmprestimo(String usuario) {
+		
+		try {
+			PreparedStatement pstmtUsuario = conexao.prepareStatement("SELECT * FROM usuario WHERE nome=?");
+			pstmtUsuario.setString(1, usuario);
+			ResultSet usuarioBanco = pstmtUsuario.executeQuery();
+			
+			if(usuarioBanco.next()) {
+				Emprestimo emprestimo = new Emprestimo(usuario, null, null, conexao);
+				emprestimo.listarEmprestimo(usuario, usuarioBanco.getInt("id"));
+			}else {
+				Emprestimo emprestimo = new Emprestimo(usuario, null, null, conexao);
+				emprestimo.listarEmprestimo(null, 0);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Erro ao listar usuarios para lista emprestimo: "+e.getMessage());
+		}
+		
+		
+		
 	}
 	
 	
